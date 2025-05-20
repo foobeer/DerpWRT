@@ -425,49 +425,6 @@ function showProfile() {
     });
 }
 
-// ====== Daily Modal Manager ======
-class DailyModalManager {
-    static async showDailyModal() {
-        const today = new Date().toDateString();
-        if (StorageManager.get(CONFIG.STORAGE_KEYS.MODAL_KEY) === today) return;
-
-        await AlertSystem.showAlert({
-            title: `🚀 Welcome To ${CONFIG.APP.name}`,
-            width: 400,
-            imageUrl: ResourceManager.getResourceUrl("{{ resource }}/Saweria.png"),
-            imageWidth: 200,
-            imageHeight: 200,
-            imageAlt: "Saweria",
-            html: `
-                <p style="text-align: center;">
-                    <a href="${CONFIG.SOCIAL.channel}" target="_blank" ${CONFIG.APP.offlineMode ? 'disabled' : ''}><img alt="Channel" src="${ResourceManager.getResourceUrl("{{ resource }}/Channel.svg")}" width="110" height="20"></a>
-                    <a href="${CONFIG.SOCIAL.group}" target="_blank" ${CONFIG.APP.offlineMode ? 'disabled' : ''}><img alt="Group" src="${ResourceManager.getResourceUrl("{{ resource }}/Group.svg")}" width="110" height="20"></a>
-                    <a href="${CONFIG.SOCIAL.personal}" target="_blank" ${CONFIG.APP.offlineMode ? 'disabled' : ''}><img alt="Personal" src="${ResourceManager.getResourceUrl("{{ resource }}/Personal.svg")}" width="110" height="20"></a>
-                </p>
-                ${CONFIG.APP.offlineMode ? '<p style="color: #f44336; text-align: center;">Anda sedang dalam mode offline</p>' : ''}
-                <div style="margin-top: 10px; text-align: center;">
-                    <input type="checkbox" id="noShowToday">
-                    <label for="noShowToday">Jangan tampilkan lagi hari ini</label>
-                </div>
-            `,
-            confirmButtonText: 'OK',
-            allowOutsideClick: false,
-            didOpen: () => {
-                const checkbox = document.getElementById('noShowToday');
-                if (checkbox) {
-                    checkbox.addEventListener('change', event => {
-                        if (event.target.checked) {
-                            StorageManager.save(CONFIG.STORAGE_KEYS.MODAL_KEY, today);
-                        } else {
-                            StorageManager.remove(CONFIG.STORAGE_KEYS.MODAL_KEY);
-                        }
-                    });
-                }
-            }
-        });
-    }
-}
-
 // ====== Service Worker Manager (with proper feature detection) ======
 class ServiceWorkerManager {
     static async register() {
